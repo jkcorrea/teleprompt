@@ -1,5 +1,7 @@
 # Teleprompt
 
+Create, compose, and use a AI prompts like you would GraphQL queries.
+
 ## Quick Start
 
 ```sh
