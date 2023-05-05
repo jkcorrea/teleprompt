@@ -1,0 +1,5 @@
+```ts
+const message = 'This came from the frontmatter!'
+```
+
+This is a test prompt. ${message}

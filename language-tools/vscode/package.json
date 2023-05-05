@@ -1,0 +1,7 @@
+{
+  "name": "language-tools",
+  "version": "0.0.0",
+  "scripts": {
+    "build:grammar": "tsx js-yaml syntaxes/psx.tmLanguage.src.yaml > syntaxes/psx.tmLanguage.json"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "name": "PSX",
+  "scopeName": "source.psx",
+  "fileTypes": [
+    "psx"
+  ],
+  "injections": {
+    "L:(meta.script.psx) (meta.lang.js | meta.lang.javascript | meta.lang.node) - (meta source)": {
+      "patterns": [
+        {
+          "begin": "(?<=>)(?!</)",
+          "end": "(?=</)",
+          "name": "meta.embedded.block.psx",
+          "contentName": "source.js",
+          "patterns": [
+            {
+              "include": "source.js"
+            }
+          ]
+        }
+      ]
+    },
+    "L:(meta.script.psx) (meta.lang.ts | meta.lang.typescript) - (meta source)": {
+      "patterns": [
+        {
+          "begin": "(?<=>)(?!</)",
+          "end": "(?=</)",
+          "name": "meta.embedded.block.psx",
+          "contentName": "source.ts",
+          "patterns": [
+            {
+              "include": "source.ts"
+            }
+          ]
+        }
+      ]
+    },
+    "L:meta.script.psx - meta.lang - (meta source)": {
+      "patterns": [
+        {
+          "begin": "(?<=>)(?!</)",
+          "end": "(?=</)",
+          "name": "meta.embedded.block.psx",
+          "contentName": "source.js",
+          "patterns": [
+            {
+              "include": "source.js"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "patterns": [
+    {
+      "include": "#scope"
+    },
+    {
+      "include": "#frontmatter"
+    }
+  ],
+  "repository": {
+    "frontmatter": {
+      "begin": "\\A(-{3})\\s*$",
+      "end": "(^|\\G)(-{3})|\\.{3}\\s*$",
+      "beginCaptures": {
+        "1": {
+          "name": "comment"
+        }
+      },
+      "endCaptures": {
+        "2": {
+          "name": "comment"
+        }
+      },
+      "contentName": "source.ts",
+      "patterns": [
+        {
+          "include": "source.ts"
+        }
+      ]
+    },
+    "scope": {
+      "patterns": [
+        {
+          "include": "#tags"
+        },
+        {
+          "include": "#interpolation"
+        },
+        {
+          "begin": "(?<=>|})",
+          "end": "(?=<|{)",
+          "name": "text.psx"
+        }
+      ]
+    },
+    "interpolation": {
+      "patterns": [
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.embedded.begin.psx"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.embedded.end.psx"
+            }
+          },
+          "contentName": "meta.embedded.expression.psx source.tsx",
+          "patterns": [
+            {
+              "begin": "\\G\\s*(?={)",
+              "end": "(?<=})",
+              "patterns": [
+                {
+                  "include": "source.tsx#object-literal"
+                }
+              ]
+            },
+            {
+              "include": "source.tsx"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

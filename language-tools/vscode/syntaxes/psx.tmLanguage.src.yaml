@@ -1,0 +1,110 @@
+---
+# Adapted from Astro's syntax file at
+# https://github.com/withastro/language-tools/blob/main/packages/vscode/syntaxes/astro.tmLanguage.src.yaml
+name: PSX
+scopeName: source.psx
+fileTypes: [psx]
+
+injections:
+  # ---- EMBEDDED LANGUAGES
+
+  # Format:
+  #  'L:meta.<script|style|template>.psx (meta.lang.<lang> | meta.lang.<langalternative> | ...) - (meta source)'
+  #     patterns: [{begin: '(?<=>)(?!</)', end: '(?=</)', name: meta.embedded.block.psx,
+  #     contentName: source.<lang>, patterns: [{ include: source.<lang> }]}]
+
+  # Style/Script Languages
+
+  # JavaScript | 'javascript' | 'source.js'
+  'L:(meta.script.psx) (meta.lang.js | meta.lang.javascript | meta.lang.node) - (meta source)':
+    patterns:
+      [
+        {
+          begin: '(?<=>)(?!</)',
+          end: '(?=</)',
+          name: meta.embedded.block.psx,
+          contentName: source.js,
+          patterns: [{ include: source.js }],
+        },
+      ]
+
+  # TypeScript | 'ts'
+  'L:(meta.script.psx) (meta.lang.ts | meta.lang.typescript) - (meta source)':
+    patterns:
+      [
+        {
+          begin: '(?<=>)(?!</)',
+          end: '(?=</)',
+          name: meta.embedded.block.psx,
+          contentName: source.ts,
+          patterns: [{ include: source.ts }],
+        },
+      ]
+
+  # Script Languages
+  # Default (JavaScript)
+  'L:meta.script.psx - meta.lang - (meta source)':
+    patterns:
+      [
+        {
+          begin: '(?<=>)(?!</)',
+          end: '(?=</)',
+          name: meta.embedded.block.psx,
+          contentName: source.js,
+          patterns: [{ include: source.js }],
+        },
+      ]
+
+# Start of grammar.
+patterns:
+  - include: '#scope'
+  - include: '#frontmatter'
+
+# Contains all of our patterns.
+repository:
+  # ------------
+  # FRONTMATTER
+
+  # We use the `comment` scope for the triple dashes to get a "faded" look
+  frontmatter:
+    begin: \A(-{3})\s*$
+    end: (^|\G)(-{3})|\.{3}\s*$
+    beginCaptures:
+      1: { name: comment }
+    endCaptures:
+      2: { name: comment }
+    contentName: source.ts
+    patterns:
+      - include: source.ts
+
+  # -------
+  # SCOPE
+
+  # Used whenever a new scope is introduced, such as at the root level or within a content tag.
+  scope:
+    patterns:
+      - include: '#tags'
+      - include: '#interpolation'
+      # Content text.
+      # This matches only inbetween all the nodes - nothing inside of them.
+      - begin: (?<=>|})
+        end: (?=<|{)
+        name: text.psx
+
+  # ------
+  #  MISC
+
+  # Plain old interpolation between `{...}` blocks.
+  interpolation:
+    patterns:
+      - begin: \{
+        end: \}
+        beginCaptures: { 0: { name: punctuation.section.embedded.begin.psx } }
+        endCaptures: { 0: { name: punctuation.section.embedded.end.psx } }
+        contentName: meta.embedded.expression.psx source.tsx
+        patterns:
+          # Object literals - usually used within attributes.
+          - begin: \G\s*(?={)
+            end: (?<=})
+            patterns: [include: source.tsx#object-literal]
+          - include: source.tsx

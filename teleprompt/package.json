@@ -1,0 +1,45 @@
+{
+  "name": "teleprompt",
+  "version": "0.0.0",
+  "files": [
+    "dist",
+    "*.d.ts",
+    "*.js"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./vite": {
+      "import": "./dist/plugins/vite.js",
+      "require": "./dist/plugins/vite.cjs",
+      "types": "./dist/plugins/vite.d.ts"
+    },
+    "./esbuild": {
+      "import": "./dist/plugins/esbuild.js",
+      "require": "./dist/plugins/esbuild.cjs",
+      "types": "./dist/plugins/esbuild.d.ts"
+    },
+    "./client": {
+      "types": "./client.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --fix --ext .ts src",
+    "test": "echo missing tests"
+  },
+  "dependencies": {
+    "change-case": "^4.1.2",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.18",
+    "vite": "^4.3.4"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
