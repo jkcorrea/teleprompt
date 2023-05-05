@@ -1,3 +1,5 @@
+// NOTE: NOT IN USE - JUST STASHING THIS
+
 // ---
 interface Props {
   tone: 'funny' | 'serious' | 'sarcastic'
