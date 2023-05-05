@@ -15,6 +15,63 @@ Then, try it out:
 yarn workspace example dev
 ```
 
+## Example
+
+Suppose you write a prompt template file like this:
+
+`src/prompts/my-amazing-prompt.prompt`
+
+````md
+```ts
+interface Props {
+  requestedAt: Date
+}
+
+interface Context {
+  adverb: string
+}
+
+export default function(props: Props): Context {
+  return {
+    time: requestedAt.toISOString(),
+    adverb: 'ease'
+  }
+}
+
+export const config: PromptConfig = {
+  model: 'gpt-3.5-turbo',
+}
+
+```
+
+This is my prompt. I can interpolate variables with ${adverb}! The current time is ${time}.
+````
+
+Then, in your client code, you simply import and call it like so:
+
+`src/App.tsx`
+
+```ts
+import MyAmazingPrompt from './prompts/my-amazing-prompt.prompt'
+
+export default function App() {
+  useEffect(() => {
+    const output = await MyAmazingPrompt(
+      // the `Props` object
+      { requestedAt: new Date() },
+      // Optional. Override the template config
+      { model: 'gpt-4' }
+    )
+    // The AI model receives:
+    // "This is my prompt. I can interpolate variables with ease! The current time is 2023-05-05T18:31:04.740Z."
+    console.log(output)
+    // => The response from the AI model...
+  }, [])
+
+  return ...
+}
+```
+
 ## Development
 
 You'll first want to [yarn link](https://classic.yarnpkg.com/lang/en/docs/cli/link/) the package dir to the `example/`:
